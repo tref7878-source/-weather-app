@@ -675,7 +675,17 @@
             background: #fff;
             border-bottom: 1px solid rgba(0,0,0,.08);
             box-shadow: 0 2px 4px 0 rgba(0,0,0,.05);
+            -webkit-animation: slideDown .4s ease both;
+            -ms-animation: slideDown .4s ease both;
             animation: slideDown .4s ease both;
+        }
+        @-webkit-keyframes slideDown {
+            from { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
+            to   { -webkit-transform: translateY(0);     transform: translateY(0); }
+        }
+        @-ms-keyframes slideDown {
+            from { -ms-transform: translateY(-100%); }
+            to   { -ms-transform: translateY(0); }
         }
         @keyframes slideDown {
             from { transform: translateY(-100%); }
@@ -686,17 +696,30 @@
             margin: 0 auto;
             padding: 0 16px;
             height: 64px;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
             justify-content: space-between;
         }
         .site-header__logo img {
             height: 48px;
+            max-height: 48px;
             width: auto;
+            max-width: 160px;
             display: block;
+            -ms-interpolation-mode: bicubic;
         }
         .site-header__nav {
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
             gap: 32px;
         }
@@ -727,7 +750,12 @@
             background: #fff;
             border-bottom: 1px solid rgba(0,0,0,.08);
             box-shadow: 0 4px 12px rgba(0,0,0,.08);
+            -webkit-animation: fadeSlide .2s ease both;
             animation: fadeSlide .2s ease both;
+        }
+        @-webkit-keyframes fadeSlide {
+            from { opacity:0; -webkit-transform: translateY(-10px); transform: translateY(-10px); }
+            to   { opacity:1; -webkit-transform: translateY(0);     transform: translateY(0); }
         }
         @keyframes fadeSlide {
             from { opacity:0; transform: translateY(-10px); }
@@ -738,7 +766,12 @@
             max-width: 1280px;
             margin: 0 auto;
             padding: 12px 16px;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
             gap: 4px;
         }
