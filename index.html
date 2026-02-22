@@ -1018,12 +1018,15 @@
         }
         applyTheme();
 
+        const OWM_KEY = '7b46002873dc8555cf1ae0b170fcd19e';
         function buildUrl(endpoint) {
-            let url = '/api/' + endpoint + '?units=' + settings.tempUnit;
+            let url = 'https://api.openweathermap.org/data/2.5/' + endpoint + '?units=' + settings.tempUnit + '&appid=' + OWM_KEY;
             if (settings.lat && settings.lon) {
                 url += '&lat=' + settings.lat + '&lon=' + settings.lon;
             } else if (settings.city) {
                 url += '&q=' + encodeURIComponent(settings.city);
+            } else {
+                url += '&q=Brooklyn,US';
             }
             return url;
         }
@@ -1043,14 +1046,19 @@
                 document.getElementById('content').innerHTML =
                     '<div class="loading"><div class="spinner"></div><div>Detecting your location & fetching weather...</div></div>';
 
-                // Get auto-detected location from server
+                // Get auto-detected location via public IP geolocation
                 if (!detectedCity) {
                     try {
-                        const locRes = await fetch('/api/location');
+                        const locRes = await fetch('https://ip-api.com/json/');
                         const locData = await locRes.json();
                         detectedCity = locData.city || 'Unknown';
                         serverLat = locData.lat;
                         serverLon = locData.lon;
+                        if (!settings.lat && !settings.lon && !settings.city) {
+                            settings.lat = locData.lat;
+                            settings.lon = locData.lon;
+                            localStorage.setItem('weatherSettings', JSON.stringify(settings));
+                        }
                     } catch(e) { detectedCity = 'Unknown'; }
                 }
 
