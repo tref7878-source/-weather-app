@@ -1,0 +1,10 @@
+*.class
+*.iml
+.gradle/
+build/
+local.properties
+phoneWeather/
+phoneWeather-20180620T211115Z-001/
+8-30-2018/
+Icons for prototype/
+New Icon_s 7-12-18/
