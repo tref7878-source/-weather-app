@@ -651,9 +651,134 @@
             .current-weather .temperature { font-size: 4em; }
             .daily-item { grid-template-columns: 80px 40px 1fr 50px; padding: 10px 14px; }
         }
+
+        /* ── Site Nav Header ───────────────────────────── */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,.08);
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,.05);
+            animation: slideDown .4s ease both;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to   { transform: translateY(0); }
+        }
+        .site-header__inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .site-header__logo img {
+            height: 48px;
+            width: auto;
+            display: block;
+        }
+        .site-header__nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .site-header__nav a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            text-decoration: none;
+            transition: color .2s;
+        }
+        .site-header__nav a.bold { font-weight: 700; }
+        .site-header__nav a:hover { color: #016dff; }
+        .site-header__hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            color: #111;
+            transition: background .2s;
+        }
+        .site-header__hamburger:hover { background: #f3f4f6; }
+        .site-header__hamburger svg { width: 24px; height: 24px; display: block; }
+        .site-header__mobile-menu {
+            display: none;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+            animation: fadeSlide .2s ease both;
+        }
+        @keyframes fadeSlide {
+            from { opacity:0; transform: translateY(-10px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+        .site-header__mobile-menu.open { display: block; }
+        .site-header__mobile-nav {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .site-header__mobile-nav a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: block;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6b7280;
+            text-decoration: none;
+            transition: color .2s, background .2s;
+        }
+        .site-header__mobile-nav a.bold { font-weight: 700; }
+        .site-header__mobile-nav a:hover { color: #016dff; background: #f9fafb; }
+        @media (max-width: 767px) {
+            .site-header__nav    { display: none; }
+            .site-header__hamburger { display: block; }
+        }
+        body { padding-top: 64px; }
     </style>
 </head>
 <body>
+    <!-- ── Site Nav Header ── -->
+    <header class="site-header" id="siteHeader">
+        <div class="site-header__inner">
+            <a href="https://tref.app/" class="site-header__logo">
+                <img src="https://tref.app/custom/domain_1/content_files/img_logo.png?1764504580" alt="Tref" />
+            </a>
+            <nav class="site-header__nav">
+                <a href="https://tref.app/" class="bold">Home</a>
+                <a href="https://tref.app/listing/">All Categories</a>
+                <a href="https://tref.app/about.html">About</a>
+                <a href="https://tref.app/advertise">Advertise</a>
+                <a href="https://tref.app/contactus">Contact us</a>
+            </nav>
+            <button class="site-header__hamburger" id="hamburgerBtn" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+                <svg id="iconMenu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg id="iconClose" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="site-header__mobile-menu" id="mobileMenu">
+            <nav class="site-header__mobile-nav">
+                <a href="https://tref.app/" class="bold">Home</a>
+                <a href="https://tref.app/listing/">All Categories</a>
+                <a href="https://tref.app/about.html">About</a>
+                <a href="https://tref.app/advertise">Advertise</a>
+                <a href="https://tref.app/contactus">Contact us</a>
+            </nav>
+        </div>
+    </header>
+
     <div class="weather-app">
         <button class="settings-btn" onclick="toggleSettings()" title="Settings">⚙️</button>
 
@@ -730,6 +855,16 @@
     </div>
 
     <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const iconMenu = document.getElementById('iconMenu');
+            const iconClose = document.getElementById('iconClose');
+            const isOpen = menu.classList.toggle('open');
+            iconMenu.style.display  = isOpen ? 'none'  : 'block';
+            iconClose.style.display = isOpen ? 'block' : 'none';
+        }
+
         const ICON_URL = 'https://openweathermap.org/img/wn/';
         let detectedCity = null;
 
