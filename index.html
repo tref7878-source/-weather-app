@@ -1046,20 +1046,35 @@
                 document.getElementById('content').innerHTML =
                     '<div class="loading"><div class="spinner"></div><div>Detecting your location & fetching weather...</div></div>';
 
-                // Get auto-detected location via public IP geolocation
+                // Get auto-detected location
                 if (!detectedCity) {
                     try {
-                        const locRes = await fetch('https://ip-api.com/json/');
-                        const locData = await locRes.json();
-                        detectedCity = locData.city || 'Unknown';
-                        serverLat = locData.lat;
-                        serverLon = locData.lon;
+                        // 1. Try browser GPS/network geolocation
+                        const pos = await new Promise((res, rej) =>
+                            navigator.geolocation.getCurrentPosition(res, rej, { timeout: 6000 }));
+                        serverLat = pos.coords.latitude;
+                        serverLon = pos.coords.longitude;
+                        detectedCity = 'Your Location';
                         if (!settings.lat && !settings.lon && !settings.city) {
-                            settings.lat = locData.lat;
-                            settings.lon = locData.lon;
+                            settings.lat = serverLat;
+                            settings.lon = serverLon;
                             localStorage.setItem('weatherSettings', JSON.stringify(settings));
                         }
-                    } catch(e) { detectedCity = 'Unknown'; }
+                    } catch(e) {
+                        // 2. Fall back to HTTPS-compatible IP geolocation
+                        try {
+                            const locRes = await fetch('https://ipapi.co/json/');
+                            const locData = await locRes.json();
+                            detectedCity = locData.city || 'Unknown';
+                            serverLat = locData.latitude;
+                            serverLon = locData.longitude;
+                            if (!settings.lat && !settings.lon && !settings.city) {
+                                settings.lat = locData.latitude;
+                                settings.lon = locData.longitude;
+                                localStorage.setItem('weatherSettings', JSON.stringify(settings));
+                            }
+                        } catch(e2) { detectedCity = 'Unknown'; }
+                    }
                 }
 
                 // Fetch weather
